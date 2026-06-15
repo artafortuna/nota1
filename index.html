@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -18,13 +17,23 @@
         textarea { height: 60px; resize: vertical; } 
         button { background: #e74c3c; color: white; border: none; padding: 10px; margin-top: 5px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
         
-        .receipt { width: 320px; background: #fff; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); color: #333; font-size: 13px; line-height: 1.4; font-family: 'Roboto', sans-serif; }
+        /* Menambahkan border 1px solid pada seluruh bagian struk agar garis tepinya terlihat jelas */
+        .receipt { 
+            width: 320px; 
+            background: #fff; 
+            padding: 20px; 
+            border: 1px solid #333; /* Menambahkan garis tepi struk */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            color: #333; 
+            font-size: 13px; 
+            line-height: 1.4; 
+            font-family: 'Roboto', sans-serif; 
+        }
+        .receipt:fullscreen { background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; border: none; }
+        
         .center { text-align: center; }
-        
         .logo-preview { width: 100px; margin: 0 auto 10px auto; display: none; border-radius: 8px; }
-        
         .divider { border-top: 1px solid #999; margin: 10px 0; }
-        
         .flex-row { display: flex; justify-content: space-between; margin: 2px 0; }
         .item-note { font-size: 11px; color: #777; margin-bottom: 6px; }
         .total-bold { font-weight: 700; font-size: 1.1em; }
@@ -54,8 +63,7 @@
     <input type="number" id="inHarga" placeholder="Harga">
     <input type="number" id="inQty" placeholder="Qty">
     <button onclick="addItem()">Tambah Item</button>
-    <button onclick="downloadReceipt()" style="background: #27ae60;">Download Gambar</button>
-    <button onclick="sendWA()" style="background: #25d366;">Kirim ke WhatsApp</button>
+    <button onclick="openFullscreen()" style="background: #3498db;">Preview Full Screen</button>
 </div>
 
 <div class="receipt" id="printable">
@@ -134,17 +142,13 @@
         document.getElementById('outKembali').innerText = "Rp0";
     }
 
-    function downloadReceipt() {
-        html2canvas(document.getElementById("printable")).then(canvas => {
-            let link = document.createElement("a");
-            link.download = "Struk_Transaksi.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        });
-    }
-
-    function sendWA() {
-        alert("Gambar sudah siap, silakan download terlebih dahulu lalu kirimkan melalui WhatsApp Web.");
+    function openFullscreen() {
+        const elem = document.getElementById("printable");
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        }
     }
 </script>
 
