@@ -9,6 +9,8 @@
             background: #f4f7f6; 
             padding: 20px; 
             display: flex; 
+            flex-direction: column; 
+            align-items: center; 
             gap: 40px; 
         }
         
@@ -17,19 +19,17 @@
         textarea { height: 60px; resize: vertical; } 
         button { background: #e74c3c; color: white; border: none; padding: 10px; margin-top: 5px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
         
-        /* Menambahkan border 1px solid pada seluruh bagian struk agar garis tepinya terlihat jelas */
         .receipt { 
             width: 320px; 
             background: #fff; 
             padding: 20px; 
-            border: 1px solid #333; /* Menambahkan garis tepi struk */
+            border: 1px solid #333; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
             color: #333; 
             font-size: 13px; 
             line-height: 1.4; 
             font-family: 'Roboto', sans-serif; 
         }
-        .receipt:fullscreen { background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; border: none; }
         
         .center { text-align: center; }
         .logo-preview { width: 100px; margin: 0 auto 10px auto; display: none; border-radius: 8px; }
@@ -38,6 +38,9 @@
         .item-note { font-size: 11px; color: #777; margin-bottom: 6px; }
         .total-bold { font-weight: 700; font-size: 1.1em; }
         .footer-text { margin-top: 15px; font-size: 11px; font-style: normal; color: #555; white-space: pre-line; }
+        
+        /* Styling Footer Hak Cipta */
+        footer { margin-top: 20px; font-size: 12px; color: #888; text-align: center; padding-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -63,7 +66,6 @@
     <input type="number" id="inHarga" placeholder="Harga">
     <input type="number" id="inQty" placeholder="Qty">
     <button onclick="addItem()">Tambah Item</button>
-    <button onclick="openFullscreen()" style="background: #3498db;">Preview Full Screen</button>
 </div>
 
 <div class="receipt" id="printable">
@@ -85,6 +87,10 @@
     <div class="flex-row total-bold"><span>Kembali</span> <span id="outKembali">Rp0</span></div>
     <div class="center footer-text" id="outFooter"></div>
 </div>
+
+<footer>
+    &copy; 2026 Aplikasi Struk Transaksi. Hak Cipta Dilindungi.
+</footer>
 
 <script>
     let cart = [];
@@ -140,15 +146,6 @@
         document.getElementById('outTotal').innerText = "Rp" + total.toLocaleString('id-ID');
         document.getElementById('outBayar').innerText = "Rp" + total.toLocaleString('id-ID');
         document.getElementById('outKembali').innerText = "Rp0";
-    }
-
-    function openFullscreen() {
-        const elem = document.getElementById("printable");
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        }
     }
 </script>
 
