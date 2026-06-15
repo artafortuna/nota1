@@ -32,14 +32,13 @@
         }
         
         .center { text-align: center; }
-        .logo-preview { width: 100px; margin: 0 auto 10px auto; display: none; border-radius: 8px; }
+        .logo-preview { width: 150px; margin: 0 auto 0px auto; display: none; border-radius: 8px; }
         .divider { border-top: 1px solid #999; margin: 10px 0; }
         .flex-row { display: flex; justify-content: space-between; margin: 2px 0; }
         .item-note { font-size: 11px; color: #777; margin-bottom: 6px; }
         .total-bold { font-weight: 700; font-size: 1.1em; }
-        .footer-text { margin-top: 15px; font-size: 11px; font-style: normal; color: #555; white-space: pre-line; }
+        .footer-text { margin-top: 0px; font-size: 11px; font-style: normal; color: #555; white-space: pre-line; }
         
-        /* Styling Footer Hak Cipta */
         footer { margin-top: 20px; font-size: 12px; color: #888; text-align: center; padding-bottom: 20px; }
     </style>
 </head>
@@ -71,21 +70,26 @@
 <div class="receipt" id="printable">
     <div class="center">
         <img id="outLogo" class="logo-preview">
-        <strong id="outNama" style="font-size: 1.4em; display:block; font-weight: 700;">Warung Anda</strong>
-        <div id="outSubNama" style="font-size: 0.85em; margin-top: 4px; white-space: pre-line;">Jalan Contoh No. 123</div>
+        <strong id="outNama" style="font-size: 1.2em; display:block; font-weight: 700;">HYRA STORE</strong>
+        <div id="outSubNama" style="font-size: 0.85em; margin-top: 0px; white-space: pre-line;">Kediri - Indonesia</div>
     </div>
     <div class="divider"></div>
     <div class="flex-row"><span>No. Transaksi</span> <span id="outNota">-</span></div>
     <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
-    <div class="flex-row"><span>Kasir</span> <span id="outKasir">-</span></div>
+    <div class="flex-row"><span>Kasir</span> <span id="outKasir">Admin</span></div>
     <div class="flex-row"><span>Pembayaran</span> <span id="outMetode">QRIS</span></div>
     <div class="divider"></div>
     <div id="itemList"></div>
     <div class="divider"></div>
-    <div class="flex-row"><span>Total Pesanan</span> <span id="outTotal">Rp0</span></div>
+    <div class="flex-row"><span>Total</span> <span id="outTotal">Rp0</span></div>
     <div class="flex-row"><span>Bayar</span> <span id="outBayar">Rp0</span></div>
-    <div class="flex-row total-bold"><span>Kembali</span> <span id="outKembali">Rp0</span></div>
+    <div class="flex-row total-bold" style="margin-bottom: 15px;"><span>Kembali</span> <span id="outKembali">Rp0</span></div>
     <div class="center footer-text" id="outFooter"></div>
+    
+    <div class="center" style="margin-top: 0px; font-size: 10px; color: #555;">
+        <div>Top Up Game, Pulsa, Paket Data, Token Listrik, Sosmed Booster</div>
+        <div>termurah, aman, legal, resmi, tepercaya di afortuna.id buka 24 jam</div>
+    </div>
 </div>
 
 <footer>
