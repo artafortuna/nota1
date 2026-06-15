@@ -49,10 +49,10 @@
     <h3>Data Transaksi</h3>
     <input type="file" id="inLogo" accept="image/*" onchange="previewLogo(event)">
     <input type="text" id="inNama" placeholder="Nama Toko" oninput="render()">
-    <textarea id="inSubNama" placeholder="Sub Nama / Alamat (bisa tekan enter)" oninput="render()"></textarea>
+    <textarea id="inSubNama" placeholder="Sub Nama / Alamat" oninput="render()"></textarea>
     <input type="text" id="inKasir" placeholder="Nama Kasir" oninput="render()">
     <input type="text" id="inNota" placeholder="No. Nota" oninput="render()">
-    <textarea id="inFooter" placeholder="Pesan Footer (bisa tekan enter)" oninput="render()"></textarea>
+    <textarea id="inFooter" placeholder="Footer" oninput="render()"></textarea>
     <select id="inBayarMetode" onchange="render()">
         <option value="QRIS">QRIS</option>
         <option value="Transfer Bank">Transfer Bank</option>
@@ -75,10 +75,10 @@
         <div id="outSubNama" style="font-size: 0.85em; margin-top: 4px; white-space: pre-line;">Jalan Contoh No. 123</div>
     </div>
     <div class="divider"></div>
-    <div class="flex-row"><span>No</span> <span id="outNota">-</span></div>
+    <div class="flex-row"><span>No. Transaksi</span> <span id="outNota">-</span></div>
     <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
     <div class="flex-row"><span>Kasir</span> <span id="outKasir">-</span></div>
-    <div class="flex-row"><span>Bayar Via</span> <span id="outMetode">QRIS</span></div>
+    <div class="flex-row"><span>Pembayaran</span> <span id="outMetode">QRIS</span></div>
     <div class="divider"></div>
     <div id="itemList"></div>
     <div class="divider"></div>
@@ -89,7 +89,7 @@
 </div>
 
 <footer>
-    &copy; 2026 Aplikasi Struk Transaksi. Hak Cipta Dilindungi.
+    &copy; 2026 PT Arta Makmur Jaya Sentosa. Hak Cipta Dilindungi.
 </footer>
 
 <script>
@@ -127,11 +127,11 @@
     }
 
     function render() {
-        document.getElementById('outNama').innerText = document.getElementById('inNama').value || "Warung Anda";
-        document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Jalan Contoh No. 123";
-        document.getElementById('outKasir').innerText = document.getElementById('inKasir').value || "-";
+        document.getElementById('outNama').innerText = document.getElementById('inNama').value || "HYRA STORE";
+        document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Indonesia";
+        document.getElementById('outKasir').innerText = document.getElementById('inKasir').value || "Admin";
         document.getElementById('outNota').innerText = document.getElementById('inNota').value;
-        document.getElementById('outFooter').innerText = document.getElementById('inFooter').value;
+        document.getElementById('outFooter').innerText = document.getElementById('inFooter').value || "Terima kasih telah berbelanja di HYRA STORE";
         document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
         
         let html = '', total = 0;
