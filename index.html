@@ -47,15 +47,34 @@
 <div class="input-section">
     <h3>Data Transaksi</h3>
     <input type="file" id="inLogo" accept="image/*" onchange="previewLogo(event)">
-    <input type="text" id="inNama" placeholder="Nama Toko" oninput="render()">
+    
+    <select id="inNama" onchange="render()">
+        <option value="HYRA STORE">HYRA STORE</option>
+        <option value="ARTA FORTUNA">ARTA FORTUNA</option>
+    </select>
+    
     <textarea id="inSubNama" placeholder="Sub Nama / Alamat" oninput="render()"></textarea>
-    <input type="text" id="inKasir" placeholder="Nama Kasir" oninput="render()">
+    
+    <select id="inKasir" onchange="render()">
+        <option value="Admin">Admin</option>
+        <option value="Kasir 1">Kasir 1</option>
+        <option value="Kasir 2">Kasir 2</option>
+        <option value="Kasir 3">Kasir 3</option>
+    </select>
+    
+    <select id="inPrefix" onchange="updateNota()">
+        <option value="HYRA">Awalan HYRA</option>
+        <option value="AFOR">Awalan AFOR</option>
+    </select>
+    
     <input type="text" id="inNota" placeholder="No. Nota" oninput="render()">
     <textarea id="inFooter" placeholder="Footer" oninput="render()"></textarea>
+    
     <select id="inBayarMetode" onchange="render()">
-        <option value="QRIS">QRIS</option>
-        <option value="Transfer Bank">Transfer Bank</option>
-        <option value="Tunai">Tunai</option>
+        <option value="Transfer BCA">Transfer BCA</option>
+        <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
+        <option value="QRIS DANA">QRIS DANA</option>
+        <option value="QRIS GoPay">QRIS GoPay</option>
     </select>
     
     <hr>
@@ -77,7 +96,7 @@
     <div class="flex-row"><span>No. Transaksi</span> <span id="outNota">-</span></div>
     <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
     <div class="flex-row"><span>Kasir</span> <span id="outKasir">Admin</span></div>
-    <div class="flex-row"><span>Pembayaran</span> <span id="outMetode">QRIS</span></div>
+    <div class="flex-row"><span>Pembayaran</span> <span id="outMetode">Transfer BCA</span></div>
     <div class="divider"></div>
     <div id="itemList"></div>
     <div class="divider"></div>
@@ -99,9 +118,15 @@
 <script>
     let cart = [];
     
+    function updateNota() {
+        const prefix = document.getElementById('inPrefix').value;
+        const randomNum = Math.floor(Math.random() * 10000000000);
+        document.getElementById('inNota').value = prefix + randomNum;
+        render();
+    }
+
     document.getElementById('outTgl').innerText = new Date().toLocaleDateString('id-ID') + " " + new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-    document.getElementById('inNota').value = "JYP" + Math.floor(Math.random() * 10000000000);
-    render();
+    updateNota(); 
 
     function previewLogo(event) {
         const reader = new FileReader();
@@ -131,9 +156,9 @@
     }
 
     function render() {
-        document.getElementById('outNama').innerText = document.getElementById('inNama').value || "HYRA STORE";
+        document.getElementById('outNama').innerText = document.getElementById('inNama').value;
         document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Indonesia";
-        document.getElementById('outKasir').innerText = document.getElementById('inKasir').value || "Admin";
+        document.getElementById('outKasir').innerText = document.getElementById('inKasir').value;
         document.getElementById('outNota').innerText = document.getElementById('inNota').value;
         document.getElementById('outFooter').innerText = document.getElementById('inFooter').value || "Terima kasih telah berbelanja di HYRA STORE";
         document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
