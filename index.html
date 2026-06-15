@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: #f4f7f6; 
+            padding: 20px; 
+            display: flex; 
+            gap: 40px; 
+        }
+        
+        .input-section { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 400px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        textarea { height: 60px; resize: vertical; } 
+        button { background: #e74c3c; color: white; border: none; padding: 10px; margin-top: 5px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
+        
+        .receipt { width: 320px; background: #fff; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); color: #333; font-size: 13px; line-height: 1.4; font-family: 'Roboto', sans-serif; }
+        .center { text-align: center; }
+        
+        .logo-preview { width: 100px; margin: 0 auto 10px auto; display: none; border-radius: 8px; }
+        
+        .divider { border-top: 1px solid #999; margin: 10px 0; }
+        
+        .flex-row { display: flex; justify-content: space-between; margin: 2px 0; }
+        .item-note { font-size: 11px; color: #777; margin-bottom: 6px; }
+        .total-bold { font-weight: 700; font-size: 1.1em; }
+        .footer-text { margin-top: 15px; font-size: 11px; font-style: normal; color: #555; white-space: pre-line; }
+    </style>
+</head>
+<body>
+
+<div class="input-section">
+    <h3>Data Transaksi</h3>
+    <input type="file" id="inLogo" accept="image/*" onchange="previewLogo(event)">
+    <input type="text" id="inNama" placeholder="Nama Toko" oninput="render()">
+    <textarea id="inSubNama" placeholder="Sub Nama / Alamat (bisa tekan enter)" oninput="render()"></textarea>
+    <input type="text" id="inKasir" placeholder="Nama Kasir" oninput="render()">
+    <input type="text" id="inNota" placeholder="No. Nota" oninput="render()">
+    <textarea id="inFooter" placeholder="Pesan Footer (bisa tekan enter)" oninput="render()"></textarea>
+    <select id="inBayarMetode" onchange="render()">
+        <option value="QRIS">QRIS</option>
+        <option value="Transfer Bank">Transfer Bank</option>
+        <option value="Tunai">Tunai</option>
+    </select>
+    
+    <hr>
+    <h4>Tambah Item</h4>
+    <input type="text" id="inItem" placeholder="Nama Produk">
+    <input type="text" id="inNote" placeholder="Catatan (opsional)">
+    <input type="number" id="inHarga" placeholder="Harga">
+    <input type="number" id="inQty" placeholder="Qty">
+    <button onclick="addItem()">Tambah Item</button>
+    <button onclick="downloadReceipt()" style="background: #27ae60;">Download Gambar</button>
+    <button onclick="sendWA()" style="background: #25d366;">Kirim ke WhatsApp</button>
+</div>
+
+<div class="receipt" id="printable">
+    <div class="center">
+        <img id="outLogo" class="logo-preview">
+        <strong id="outNama" style="font-size: 1.4em; display:block; font-weight: 700;">Warung Anda</strong>
+        <div id="outSubNama" style="font-size: 0.85em; margin-top: 4px; white-space: pre-line;">Jalan Contoh No. 123</div>
+    </div>
+    <div class="divider"></div>
+    <div class="flex-row"><span>No</span> <span id="outNota">-</span></div>
+    <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
+    <div class="flex-row"><span>Kasir</span> <span id="outKasir">-</span></div>
+    <div class="flex-row"><span>Bayar Via</span> <span id="outMetode">QRIS</span></div>
+    <div class="divider"></div>
+    <div id="itemList"></div>
+    <div class="divider"></div>
+    <div class="flex-row"><span>Total Pesanan</span> <span id="outTotal">Rp0</span></div>
+    <div class="flex-row"><span>Bayar</span> <span id="outBayar">Rp0</span></div>
+    <div class="flex-row total-bold"><span>Kembali</span> <span id="outKembali">Rp0</span></div>
+    <div class="center footer-text" id="outFooter"></div>
+</div>
+
+<script>
+    let cart = [];
+    
+    document.getElementById('outTgl').innerText = new Date().toLocaleDateString('id-ID') + " " + new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+    document.getElementById('inNota').value = "JYP" + Math.floor(Math.random() * 10000000000);
+    render();
+
+    function previewLogo(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('outLogo');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function addItem() {
+        const item = {
+            name: document.getElementById('inItem').value,
+            note: document.getElementById('inNote').value,
+            price: parseInt(document.getElementById('inHarga').value),
+            qty: parseInt(document.getElementById('inQty').value)
+        };
+        if(item.name && item.price) { 
+            cart.push(item); 
+            render(); 
+            document.getElementById('inItem').value = '';
+            document.getElementById('inNote').value = '';
+            document.getElementById('inHarga').value = '';
+            document.getElementById('inQty').value = '';
+        }
+    }
+
+    function render() {
+        document.getElementById('outNama').innerText = document.getElementById('inNama').value || "Warung Anda";
+        document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Jalan Contoh No. 123";
+        document.getElementById('outKasir').innerText = document.getElementById('inKasir').value || "-";
+        document.getElementById('outNota').innerText = document.getElementById('inNota').value;
+        document.getElementById('outFooter').innerText = document.getElementById('inFooter').value;
+        document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
+        
+        let html = '', total = 0;
+        cart.forEach(i => {
+            total += (i.price * i.qty);
+            html += `<div>
+                        <div class="flex-row"><span>${i.name} x ${i.qty}</span> <span>Rp${(i.price * i.qty).toLocaleString('id-ID')}</span></div>
+                        ${i.note ? `<div class="item-note">${i.note}</div>` : ''}
+                     </div>`;
+        });
+        document.getElementById('itemList').innerHTML = html;
+        document.getElementById('outTotal').innerText = "Rp" + total.toLocaleString('id-ID');
+        document.getElementById('outBayar').innerText = "Rp" + total.toLocaleString('id-ID');
+        document.getElementById('outKembali').innerText = "Rp0";
+    }
+
+    function downloadReceipt() {
+        html2canvas(document.getElementById("printable")).then(canvas => {
+            let link = document.createElement("a");
+            link.download = "Struk_Transaksi.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
+
+    function sendWA() {
+        alert("Gambar sudah siap, silakan download terlebih dahulu lalu kirimkan melalui WhatsApp Web.");
+    }
+</script>
+
+</body>
+</html>
