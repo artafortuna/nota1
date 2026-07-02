@@ -1,0 +1,388 @@
+/* GLOBAL SETTINGS */
+:root {
+    --bg-color: #f4f7f6;
+    --primary-red: #e74c3c;
+    --primary-teal: #20b2aa;
+    --teal-hover: #1a968f;
+    --nav-bg: rgba(255, 255, 255, 0.85);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-color);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    padding-bottom: 100px; /* Ditambah agar konten tidak tertutup nav & footer */
+}
+
+/* VIEW MANAGEMENT */
+.view {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+.view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================= */
+/* VIEW 1: STRUK KASIR STYLES */
+/* ========================================= */
+.struk-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+}
+
+.input-section { 
+    background: #fff; 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    width: 400px; 
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.input-section input, .input-section select, .input-section textarea { 
+    width: 100%; 
+    padding: 10px; 
+    margin: 8px 0; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-family: 'Roboto', sans-serif; 
+}
+.input-section textarea { height: 60px; resize: vertical; } 
+.btn-struk { 
+    background: var(--primary-red); 
+    color: white; 
+    border: none; 
+    padding: 10px; 
+    margin-top: 5px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-weight: bold; 
+}
+
+.receipt { 
+    width: 320px; 
+    background: #fff; 
+    padding: 20px; 
+    border: 1px solid #333; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    color: #333; 
+    font-size: 13px; /* JANGAN UBAH */
+    line-height: 1.4; 
+    font-family: 'Roboto', sans-serif; 
+    margin: 0 auto;
+}
+
+.center { text-align: center; }
+.logo-preview { 
+    width: 120px; /* Diperkecil dari 150px menjadi 120px agar lebih presisi */
+    margin: 0 auto 0px auto; 
+    display: none; 
+    border-radius: 8px; 
+}
+
+.divider { border-top: 1px solid #999; margin: 10px 0; }
+.flex-row { display: flex; justify-content: space-between; margin: 2px 0; align-items: center; }
+.item-note { font-size: 11px; color: #777; margin-bottom: 6px; }
+.total-bold { font-weight: 700; font-size: 1.1em; }
+
+/* Disamakan ukurannya */
+.footer-text { margin-top: 0px; font-size: 10px; color: #555; }
+/* FOOTER HAK CIPTA MELAYANG */
+/* FOOTER HAK CIPTA MELAYANG */
+/* FOOTER HAK CIPTA MELAYANG */
+.floating-copyright {
+    position: fixed;
+    bottom: 0; /* Turun menempel di paling dasar layar */
+    left: 0;
+    width: 100%;
+    background: rgba(244, 247, 246, 0.85); 
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    text-align: center;
+    font-size: 10px;
+    color: #7f8c8d;
+    padding: 4px 0;
+    z-index: 1005; 
+    pointer-events: none; 
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-top: 1px solid rgba(0,0,0,0.05); 
+}
+
+.item-delete-btn {
+    background: #ffeeee;
+    color: var(--primary-red);
+    border: 1px solid #ffcccc;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 2px 6px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.item-delete-btn:hover { background: #ffcccc; }
+
+
+/* ========================================= */
+/* VIEW 2: SOSMED BOOSTER STYLES */
+/* ========================================= */
+.sosmed-container {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 30px 15px;
+}
+
+.form-section {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 35px;
+    border-top: 4px solid var(--primary-teal);
+}
+.form-section h3 {
+    margin-top: 0;
+    font-size: 16px; /* JANGAN UBAH */
+    color: #2c3e50;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 13px; /* JANGAN UBAH */
+    color: #444;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px; /* JANGAN UBAH */
+    transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-teal);
+}
+.btn-sosmed {
+    background-color: var(--primary-teal);
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 14px; /* JANGAN UBAH */
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+.btn-sosmed:hover {
+    background-color: var(--teal-hover);
+}
+
+.table-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.table-section h1 {
+    text-align: center;
+    color: #212529;
+    /* Margin bawah diubah menjadi minus agar turun mendekat ke subjudul */
+    margin: 0 0 -2px 0; 
+    font-size: 26px; /* JANGAN UBAH */
+    letter-spacing: 1px;
+    font-weight: 700;
+    /* Membuat huruf otomatis kapital semua */
+    text-transform: uppercase; 
+}
+.table-section h2 {
+    text-align: center;
+    color: #6c757d;
+    margin: 0 0 25px 0;
+    font-size: 15px; /* JANGAN UBAH */
+    font-weight: 400;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* JANGAN UBAH */
+}
+td {
+    border: 1px solid #e0e0e0;
+    padding: 14px 16px; 
+    vertical-align: middle;
+}
+.col-label {
+    width: 28%;
+    font-weight: 700; 
+    color: #333333; 
+}
+.col-value {
+    width: 72%;
+    font-weight: 400; 
+    color: #333333; 
+    word-break: break-word;
+}
+.status-badge {
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px; /* JANGAN UBAH */
+    font-weight: 700;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+/* ========================================= */
+/* BOTTOM NAVIGATION (MUTAKHIR & CANGGIH) */
+/* ========================================= */
+.bottom-nav {
+    position: fixed;
+    bottom: 22px; /* Naik sedikit posisinya ke atas footer */
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    z-index: 1000;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 50%;
+}
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+}
+.nav-item span {
+    font-size: 12px;
+    font-weight: 700;
+}
+.nav-item.active {
+    color: var(--primary-teal);
+}
+.nav-item.active:nth-child(1) {
+    color: var(--primary-red);
+}
+.nav-item.active svg {
+    transform: translateY(-3px);
+}
+
+/* ========================================= */
+/* CUSTOM POPUP ALERT & CONFIRM UI */
+/* ========================================= */
+.custom-ui-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+.custom-ui-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.custom-ui-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: scale(1);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.custom-ui-overlay.hidden .custom-ui-modal {
+    transform: scale(0.8);
+}
+.custom-ui-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+.custom-ui-modal h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+.custom-ui-modal p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+}
+.custom-ui-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.custom-ui-actions button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition: transform 0.1s, opacity 0.2s;
+}
+.custom-ui-actions button:active {
+    transform: scale(0.95);
+}
+.btn-confirm {
+    background: var(--primary-teal);
+    color: white;
+    flex: 1;
+}
+.btn-cancel {
+    background: #f1f2f6;
+    color: #576574;
+    flex: 1;
+}
+.btn-cancel.hidden {
+    display: none;
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arta Fortuna - Multi Tools</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <main id="app-container">
+        
+        <section id="view-struk" class="view active">
+            <div class="struk-wrapper">
+                <div class="input-section">
+                    <h3>Data Transaksi</h3>
+                    <input type="file" id="inLogo" accept="image/*" onchange="previewLogo(event)">
+                    
+                    <select id="inNama" onchange="render()">
+                        <option value="HYRA STORE">HYRA STORE</option>
+                        <option value="ARTA FORTUNA">ARTA FORTUNA</option>
+                    </select>
+                    
+                    <textarea id="inSubNama" placeholder="Sub Nama / Alamat" oninput="render()"></textarea>
+                    
+                    <select id="inKasir" onchange="render()">
+                        <option value="Admin">Admin</option>
+                        <option value="Kasir 1">Kasir 1</option>
+                        <option value="Kasir 2">Kasir 2</option>
+                        <option value="Kasir 3">Kasir 3</option>
+                    </select>
+                    
+                    <select id="inPrefix" onchange="updateNota()">
+                        <option value="HYRA">Awalan HYRA</option>
+                        <option value="AFOR">Awalan AFOR</option>
+                    </select>
+                    
+                    <input type="text" id="inNota" placeholder="No. Nota" oninput="render()">
+                    <textarea id="inFooter" placeholder="Footer" oninput="render()"></textarea>
+                    
+                    <select id="inBayarMetode" onchange="render()">
+                        <option value="Transfer BCA">Transfer BCA</option>
+                        <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
+                        <option value="QRIS DANA">QRIS DANA</option>
+                        <option value="QRIS GoPay">QRIS GoPay</option>
+                    </select>
+                    
+                    <hr>
+                    <h4>Tambah Item</h4>
+                    <input type="text" id="inItem" placeholder="Nama Produk">
+                    <input type="text" id="inNote" placeholder="Catatan (opsional)">
+                    <input type="number" id="inHarga" placeholder="Harga">
+                    <input type="number" id="inQty" placeholder="Qty">
+                    <button class="btn-struk" onclick="addItem()">Tambah Item</button>
+                </div>
+
+                <div>
+                    <div class="receipt" id="printable">
+                        <div class="center">
+        <img id="outLogo" class="logo-preview">
+        <strong id="outNama" style="font-size: 1.2em; display:block; font-weight: 700;">HYRA STORE</strong>
+        <div id="outKontak" style="font-size: 0.85em; margin-top: 2px;">081299881042 | afortuna.id</div>
+        <div id="outSubNama" style="font-size: 0.85em; margin-top: 0px; white-space: pre-line;">Kediri - Jawa Timur - Indonesia</div>
+    </div>
+                        <div class="divider"></div>
+                        <div class="flex-row"><span>No. Transaksi</span> <span id="outNota">-</span></div>
+                        <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
+                        <div class="flex-row"><span>Kasir</span> <span id="outKasir">Admin</span></div>
+                        <div class="flex-row"><span>Pembayaran</span> <span id="outMetode">Transfer BCA</span></div>
+                        <div class="divider"></div>
+                        <div id="itemList"></div>
+                        <div class="divider"></div>
+                        <div class="flex-row"><span>Total</span> <span id="outTotal">Rp 0</span></div>
+                        <div class="flex-row"><span>Bayar</span> <span id="outBayar">Rp 0</span></div>
+                        <div class="flex-row total-bold" style="margin-bottom: 15px;"><span>Kembali</span> <span id="outKembali">Rp 0</span></div>
+                        
+                        <div class="center footer-text" id="outFooter">Terima kasih telah berbelanja di HYRA STORE</div>
+                        <div class="center footer-text">Top Up Game, Pulsa, Paket Data, Token Listrik, Sosmed Booster</div>
+                        <div class="center footer-text">termurah, aman, legal, resmi, tepercaya di afortuna.id buka 24 jam</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-sosmed" class="view">
+            <div class="sosmed-container">
+                <div class="form-section">
+                    <h3>Masukkan Data Pesanan</h3>
+                    <form id="orderForm">
+                        <div class="form-group">
+                            <label>Order ID</label>
+                            <input type="text" id="in-order-id" value="9604370">
+                        </div>
+                        <div class="form-group">
+                            <label>Layanan</label>
+                            <input type="text" id="in-layanan" value="Instagram Likes [ Max 1M ] | Real Accounts with Post | Refill 30 Days | Instant Start">
+                        </div>
+                        <div class="form-group">
+                            <label>Target</label>
+                            <input type="text" id="in-target" value="https://www.instagram.com/p/DaQKv4Xk8qt/?igsh=azVhdzBjNGV2eWli">
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah</label>
+                            <input type="text" id="in-jumlah" value="750">
+                        </div>
+                        <div class="form-group">
+                            <label>Start</label>
+                            <input type="text" id="in-start" value="13">
+                        </div>
+                        <div class="form-group">
+                            <label>Remains</label>
+                            <input type="text" id="in-remains" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="in-status">
+                                <option value="Success" selected>SUCCESS</option>
+                                <option value="In Progress">IN PROGRESS</option>
+                                <option value="Processing">PROCESSING</option>
+                                <option value="Pending">PENDING</option>
+                                <option value="Partial">PARTIAL</option>
+                                <option value="Error">ERROR</option>
+                                <option value="Refill">REFILL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal & Waktu</label>
+                            <input type="datetime-local" id="in-tanggal" step="1" value="2026-07-01T21:19:20">
+                        </div>
+                        <button type="button" class="btn-sosmed" onclick="processUpdateTable()">Tampilkan ke Tabel</button>
+                    </form>
+                </div>
+
+                <div class="table-section">
+                    <h1>Arta Fortuna</h1>
+                    <h2>Sosmed Booster</h2>
+
+                    <table id="resultTable">
+                        <tbody>
+                            <tr>
+                                <td class="col-label">Order ID</td>
+                                <td class="col-value" id="val-order-id">9604370</td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Layanan</td>
+                                <td class="col-value" id="val-layanan">Instagram Likes [ Max 1M ] | Real Accounts with Post | Refill 30 Days | Instant Start</td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Target</td>
+                                <td class="col-value" id="val-target">https://www.instagram.com/p/DaQKv4Xk8qt/?igsh=azVhdzBjNGV2eWli</td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Jumlah</td>
+                                <td class="col-value" id="val-jumlah">750</td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Start</td>
+                                <td class="col-value" id="val-start">13</td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Remains</td>
+                                <td class="col-value" id="val-remains"></td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Status</td>
+                                <td class="col-value">
+                                    <span class="status-badge" id="val-status" style="background-color: #30c696;">Success</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-label">Tanggal & Waktu</td>
+                                <td class="col-value" id="val-tanggal">01 Juli 2026, 21:19:20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('view-struk', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2H4z"/><path d="M16 14h-8"/><path d="M16 10h-8"/><path d="M10 6h-2"/></svg>
+            <span>POS Kasir</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('view-sosmed', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <span>Sosmed</span>
+        </div>
+    </nav>
+
+    <div id="custom-ui-overlay" class="custom-ui-overlay hidden">
+        <div class="custom-ui-modal">
+            <div id="custom-ui-icon" class="custom-ui-icon"></div>
+            <h3 id="custom-ui-title">Title</h3>
+            <p id="custom-ui-message">Message here</p>
+            <div class="custom-ui-actions">
+                <button id="custom-ui-btn-cancel" class="btn-cancel hidden">Batal</button>
+                <button id="custom-ui-btn-confirm" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+        <div class="floating-copyright">
+        &copy; 2026 Arta Fortuna. Hak Cipta Dilindungi.
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
