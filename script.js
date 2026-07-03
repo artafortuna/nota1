@@ -13,7 +13,7 @@ requestDB.onupgradeneeded = function(event) {
 
 requestDB.onsuccess = function(event) {
     db = event.target.result;
-    loadFromDB(); // Muat data terakhir saat web dibuka
+    loadFromDB();
 };
 
 function saveToDB(key, data) {
@@ -28,7 +28,6 @@ function loadFromDB() {
     const tx = db.transaction("appState", "readonly");
     const store = tx.objectStore("appState");
     
-    // 1. Load Logo POS
     const reqLogo = store.get("posLogo");
     reqLogo.onsuccess = function() {
         if (reqLogo.result && reqLogo.result.data) {
@@ -38,7 +37,6 @@ function loadFromDB() {
         }
     };
 
-    // 2. Load Pengaturan POS
     const reqPos = store.get("posSettings");
     reqPos.onsuccess = function() {
         if (reqPos.result && reqPos.result.data) {
@@ -52,41 +50,47 @@ function loadFromDB() {
         }
     };
 
-    // 3. Load Keranjang Belanja (Cart)
     const reqCart = store.get("cart");
     reqCart.onsuccess = function() {
         if (reqCart.result && reqCart.result.data) {
             cart = reqCart.result.data;
         }
-        render(); // Terapkan tampilan setelah data dimuat
+        render();
     };
 
-    // 4. Load Data Sosmed Terakhir
     const reqSosmed = store.get("sosmed");
     reqSosmed.onsuccess = function() {
         if (reqSosmed.result && reqSosmed.result.data) {
             const d = reqSosmed.result.data;
+            document.getElementById('in-order-id').value = d.orderId || '';
+            document.getElementById('in-layanan').value = d.layanan || '';
+            document.getElementById('in-target').value = d.target || '';
+            document.getElementById('in-jumlah').value = d.jumlah || '';
+            document.getElementById('in-start').value = d.start || '';
+            document.getElementById('in-remains').value = d.remains || '';
+            document.getElementById('in-status').value = d.status || 'Success';
+            document.getElementById('in-tanggal').value = d.rawTanggal || '';
             
-            // Kembalikan ke form
-            document.getElementById('in-order-id').value = d.orderId;
-            document.getElementById('in-layanan').value = d.layanan;
-            document.getElementById('in-target').value = d.target;
-            document.getElementById('in-jumlah').value = d.jumlah;
-            document.getElementById('in-start').value = d.start;
-            document.getElementById('in-remains').value = d.remains;
-            document.getElementById('in-status').value = d.status;
-            document.getElementById('in-tanggal').value = d.rawTanggal;
-            
-            // Kembalikan ke tabel
-            document.getElementById('val-order-id').textContent = d.orderId;
-            document.getElementById('val-layanan').textContent = d.layanan;
-            document.getElementById('val-target').textContent = d.target;
-            document.getElementById('val-jumlah').textContent = d.jumlah;
-            document.getElementById('val-start').textContent = d.start;
-            document.getElementById('val-remains').textContent = d.remains;
-            document.getElementById('val-status').textContent = d.status;
-            document.getElementById('val-status').style.backgroundColor = statusColors[d.status] || '#777';
-            document.getElementById('val-tanggal').textContent = formatDateIndo(d.rawTanggal);
+            document.getElementById('val-order-id').textContent = d.orderId || '';
+            document.getElementById('val-layanan').textContent = d.layanan || '';
+            document.getElementById('val-target').textContent = d.target || '';
+            document.getElementById('val-jumlah').textContent = d.jumlah || '';
+            document.getElementById('val-start').textContent = d.start || '';
+            document.getElementById('val-remains').textContent = d.remains || '';
+            document.getElementById('val-status').textContent = d.status || 'Success';
+            document.getElementById('val-status').style.backgroundColor = statusColors[d.status] || '#30c696';
+            document.getElementById('val-tanggal').textContent = formatDateIndo(d.rawTanggal) || '';
+        } else {
+            // Kosongkan tabel jika tidak ada data tersimpan
+            document.getElementById('val-order-id').textContent = '';
+            document.getElementById('val-layanan').textContent = '';
+            document.getElementById('val-target').textContent = '';
+            document.getElementById('val-jumlah').textContent = '';
+            document.getElementById('val-start').textContent = '';
+            document.getElementById('val-remains').textContent = '';
+            document.getElementById('val-status').textContent = 'Success';
+            document.getElementById('val-status').style.backgroundColor = '#30c696';
+            document.getElementById('val-tanggal').textContent = '';
         }
     };
 }
@@ -155,7 +159,7 @@ const CustomUI = {
    3. LOGIKA SKRIP 1: POS STRUK KASIR
    ============================================================== */
 let cart = [];
-const usedRandomNumbers = new Set(); // Memori angka acak
+const usedRandomNumbers = new Set();
 
 function updateNota() {
     const prefix = document.getElementById('inPrefix').value;
@@ -188,7 +192,7 @@ function previewLogo(event) {
         const output = document.getElementById('outLogo');
         output.src = reader.result;
         output.style.display = 'block';
-        saveToDB("posLogo", reader.result); // Save Base64 Image to IndexedDB
+        saveToDB("posLogo", reader.result);
     };
     if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
 }
@@ -211,7 +215,7 @@ function addItem() {
     };
     
     cart.push(item); 
-    saveToDB("cart", cart); // Simpan keranjang ke DB
+    saveToDB("cart", cart);
     render(); 
     
     document.getElementById('inItem').value = '';
@@ -223,22 +227,18 @@ function addItem() {
 function hapusItem(index) {
     CustomUI.confirm("Hapus Item", "Yakin ingin menghapus produk ini dari keranjang?", () => {
         cart.splice(index, 1);
-        saveToDB("cart", cart); // Update keranjang di DB
+        saveToDB("cart", cart);
         render();
     });
 }
 
 function render() {
     document.getElementById('outNama').innerText = document.getElementById('inNama').value;
-    document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Indonesia";
+    document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Jawa Timur - Indonesia";
     document.getElementById('outKasir').innerText = document.getElementById('inKasir').value;
     document.getElementById('outNota').innerText = document.getElementById('inNota').value;
     document.getElementById('outFooter').innerText = document.getElementById('inFooter').value || "Terima kasih telah berbelanja di HYRA STORE";
     document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
-    
-   document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Jawa Timur - Indonesia";
-    
-    // ... (kode lainnya tetap sama)
     
     let html = '', total = 0;
     cart.forEach((i) => {
@@ -256,7 +256,6 @@ function render() {
     document.getElementById('outBayar').innerText = "Rp " + total.toLocaleString('id-ID');
     document.getElementById('outKembali').innerText = "Rp 0 ";
 
-    // Auto-save settingan form Kasir ke DB
     saveToDB("posSettings", {
         nama: document.getElementById('inNama').value,
         subNama: document.getElementById('inSubNama').value,
@@ -308,7 +307,6 @@ function updateTable() {
     const status = document.getElementById('in-status').value;
     const rawTanggal = document.getElementById('in-tanggal').value;
 
-    // Tampilkan di UI
     document.getElementById('val-order-id').textContent = orderId;
     document.getElementById('val-layanan').textContent = layanan;
     document.getElementById('val-target').textContent = target;
@@ -321,7 +319,6 @@ function updateTable() {
     statusBadge.textContent = status;
     statusBadge.style.backgroundColor = statusColors[status] || '#777'; 
 
-    // Simpan ke IndexedDB
     saveToDB("sosmed", {
         orderId, layanan, target, jumlah, start, remains, status, rawTanggal
     });
@@ -338,7 +335,6 @@ window.onload = function() {
     const hh = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
     
-    // Hasil: 02/07/2026 20.44 WIB
     document.getElementById('outTgl').innerText = `${dd}/${mm}/${yyyy} ${hh}.${min} WIB`;
     
     updateNota();
