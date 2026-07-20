@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Arta Fortuna - Multi Tools</title>
     
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f4f7f6">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -57,16 +62,19 @@
                     <input type="number" id="inHarga" placeholder="Harga">
                     <input type="number" id="inQty" placeholder="Qty">
                     <button class="btn-struk" onclick="addItem()">Tambah Item</button>
+                    
+                    <!-- Tombol Download HD Struk -->
+                    <button class="btn-struk" style="background-color: #27ae60; margin-top: 15px;" onclick="downloadStruk()">Download Struk HD</button>
                 </div>
 
                 <div>
                     <div class="receipt" id="printable">
                         <div class="center">
-        <img id="outLogo" class="logo-preview">
-        <strong id="outNama" style="font-size: 1.2em; display:block; font-weight: 700;">HYRA STORE</strong>
-        <div id="outKontak" style="font-size: 0.85em; margin-top: 2px;">081299881042 | afortuna.id</div>
-        <div id="outSubNama" style="font-size: 0.85em; margin-top: 0px; white-space: pre-line;">Kediri - Jawa Timur - Indonesia</div>
-    </div>
+                            <img id="outLogo" class="logo-preview">
+                            <strong id="outNama" style="font-size: 1.2em; display:block; font-weight: 700;">HYRA STORE</strong>
+                            <div id="outKontak" style="font-size: 0.85em; margin-top: 2px;">081299881042 | afortuna.id</div>
+                            <div id="outSubNama" style="font-size: 0.85em; margin-top: 0px; white-space: pre-line;">Kediri - Jawa Timur - Indonesia</div>
+                        </div>
                         <div class="divider"></div>
                         <div class="flex-row"><span>No. Transaksi</span> <span id="outNota">-</span></div>
                         <div class="flex-row"><span>Tanggal</span> <span id="outTgl"></span></div>
@@ -133,10 +141,13 @@
                             <input type="datetime-local" id="in-tanggal" step="1" value="">
                         </div>
                         <button type="button" class="btn-sosmed" onclick="processUpdateTable()">Tampilkan ke Tabel</button>
+                        
+                        <!-- Tombol Download HD Sosmed -->
+                        <button type="button" class="btn-sosmed" style="background-color: #27ae60; margin-top: 10px;" onclick="downloadSosmed()">Download Tabel HD</button>
                     </form>
                 </div>
 
-                <div class="table-section">
+                <div class="table-section" id="printable-sosmed">
                     <h1>Arta Fortuna</h1>
                     <h2>Sosmed Booster</h2>
 
@@ -205,12 +216,30 @@
                 <button id="custom-ui-btn-confirm" class="btn-confirm">OK</button>
             </div>
         </div>
-    </nav>
+    </div>
 
-        <div class="floating-copyright">
+    <div class="floating-copyright">
         &copy; 2026 Arta Fortuna. Hak Cipta Dilindungi.
     </div>
 
+    <!-- Library untuk mengubah div menjadi gambar JPG HD -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Registrasi Service Worker untuk PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker terdaftar sukses:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker gagal mendaftar:', error);
+                    });
+            });
+        }
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>
