@@ -28,6 +28,7 @@ function loadFromDB() {
     const tx = db.transaction("appState", "readonly");
     const store = tx.objectStore("appState");
     
+    // Load Logo
     const reqLogo = store.get("posLogo");
     reqLogo.onsuccess = function() {
         if (reqLogo.result && reqLogo.result.data) {
@@ -37,6 +38,7 @@ function loadFromDB() {
         }
     };
 
+    // Load POS Settings
     const reqPos = store.get("posSettings");
     reqPos.onsuccess = function() {
         if (reqPos.result && reqPos.result.data) {
@@ -45,11 +47,14 @@ function loadFromDB() {
             if(s.subNama) document.getElementById('inSubNama').value = s.subNama;
             if(s.kasir) document.getElementById('inKasir').value = s.kasir;
             if(s.prefix) document.getElementById('inPrefix').value = s.prefix;
+            if(s.nota) document.getElementById('inNota').value = s.nota;
             if(s.footer) document.getElementById('inFooter').value = s.footer;
             if(s.metode) document.getElementById('inBayarMetode').value = s.metode;
         }
+        render(); // Render ulang dengan data yang diload
     };
 
+    // Load Cart
     const reqCart = store.get("cart");
     reqCart.onsuccess = function() {
         if (reqCart.result && reqCart.result.data) {
@@ -58,10 +63,12 @@ function loadFromDB() {
         render();
     };
 
+    // Load Sosmed Draft & Table
     const reqSosmed = store.get("sosmed");
     reqSosmed.onsuccess = function() {
         if (reqSosmed.result && reqSosmed.result.data) {
             const d = reqSosmed.result.data;
+            // Kembalikan ke form input
             document.getElementById('in-order-id').value = d.orderId || '';
             document.getElementById('in-layanan').value = d.layanan || '';
             document.getElementById('in-target').value = d.target || '';
@@ -71,6 +78,7 @@ function loadFromDB() {
             document.getElementById('in-status').value = d.status || 'Success';
             document.getElementById('in-tanggal').value = d.rawTanggal || '';
             
+            // Kembalikan ke tampilan tabel
             document.getElementById('val-order-id').textContent = d.orderId || '';
             document.getElementById('val-layanan').textContent = d.layanan || '';
             document.getElementById('val-target').textContent = d.target || '';
@@ -82,15 +90,8 @@ function loadFromDB() {
             document.getElementById('val-tanggal').textContent = formatDateIndo(d.rawTanggal) || '';
         } else {
             // Kosongkan tabel jika tidak ada data tersimpan
-            document.getElementById('val-order-id').textContent = '';
-            document.getElementById('val-layanan').textContent = '';
-            document.getElementById('val-target').textContent = '';
-            document.getElementById('val-jumlah').textContent = '';
-            document.getElementById('val-start').textContent = '';
-            document.getElementById('val-remains').textContent = '';
             document.getElementById('val-status').textContent = 'Success';
             document.getElementById('val-status').style.backgroundColor = '#30c696';
-            document.getElementById('val-tanggal').textContent = '';
         }
     };
 }
@@ -241,11 +242,13 @@ function render() {
     document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
     
     let html = '', total = 0;
-    cart.forEach((i) => {
+    cart.forEach((i, index) => {
         total += (i.price * i.qty);
         html += `<div>
                     <div class="flex-row">
-                        <span>${i.name} x ${i.qty}</span> 
+                        <span>${i.name} x ${i.qty} 
+                            <button class="item-delete-btn" onclick="hapusItem(${index})">Hapus</button>
+                        </span> 
                         <span>Rp ${(i.price * i.qty).toLocaleString('id-ID')}</span>
                     </div>
                     ${i.note ? `<div class="item-note">${i.note}</div>` : ''}
@@ -256,11 +259,13 @@ function render() {
     document.getElementById('outBayar').innerText = "Rp " + total.toLocaleString('id-ID');
     document.getElementById('outKembali').innerText = "Rp 0 ";
 
+    // Simpan semua input ke DB agar tidak hilang saat refresh
     saveToDB("posSettings", {
         nama: document.getElementById('inNama').value,
         subNama: document.getElementById('inSubNama').value,
         kasir: document.getElementById('inKasir').value,
         prefix: document.getElementById('inPrefix').value,
+        nota: document.getElementById('inNota').value,
         footer: document.getElementById('inFooter').value,
         metode: document.getElementById('inBayarMetode').value
     });
@@ -286,6 +291,20 @@ function formatDateIndo(dateString) {
     const seconds = String(dateObj.getSeconds()).padStart(2, '0');
     return `${day} ${month} ${year}, ${hours}:${minutes}:${seconds}`;
 }
+
+// Fitur simpan draft sosmed otomatis saat mengetik
+document.getElementById('orderForm').addEventListener('input', function() {
+    saveToDB("sosmed", {
+        orderId: document.getElementById('in-order-id').value,
+        layanan: document.getElementById('in-layanan').value,
+        target: document.getElementById('in-target').value,
+        jumlah: document.getElementById('in-jumlah').value,
+        start: document.getElementById('in-start').value,
+        remains: document.getElementById('in-remains').value,
+        status: document.getElementById('in-status').value,
+        rawTanggal: document.getElementById('in-tanggal').value
+    });
+});
 
 function processUpdateTable() {
     const orderId = document.getElementById('in-order-id').value;
@@ -337,5 +356,55 @@ window.onload = function() {
     
     document.getElementById('outTgl').innerText = `${dd}/${mm}/${yyyy} ${hh}.${min} WIB`;
     
-    updateNota();
+    // Beri waktu sejenak untuk IndexedDB load, jika nota kosong maka buat nota baru
+    setTimeout(() => {
+        if (!document.getElementById('inNota').value) {
+            updateNota();
+        }
+    }, 300);
 };
+
+/* ==============================================================
+   6. FITUR DOWNLOAD JPG HD (HTML2CANVAS)
+   ============================================================== */
+function downloadStruk() {
+    const element = document.getElementById('printable');
+    // Matikan shadow sementara agar hasil JPG lebih rapi di tepiannya
+    const originalShadow = element.style.boxShadow;
+    element.style.boxShadow = 'none';
+
+    html2canvas(element, { 
+        scale: 3, // Resolusi HD (3x lipat)
+        backgroundColor: '#ffffff', 
+        useCORS: true 
+    }).then(canvas => {
+        const link = document.createElement('a');
+        const notaName = document.getElementById('inNota').value || 'HYRA';
+        link.download = `Struk_${notaName}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.click();
+        
+        // Kembalikan shadow
+        element.style.boxShadow = originalShadow;
+    });
+}
+
+function downloadSosmed() {
+    const element = document.getElementById('printable-sosmed');
+    const originalShadow = element.style.boxShadow;
+    element.style.boxShadow = 'none';
+
+    html2canvas(element, { 
+        scale: 3, 
+        backgroundColor: '#ffffff', 
+        useCORS: true 
+    }).then(canvas => {
+        const link = document.createElement('a');
+        const orderId = document.getElementById('in-order-id').value || 'Sosmed';
+        link.download = `Laporan_${orderId}.jpg`;
+        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.click();
+        
+        element.style.boxShadow = originalShadow;
+    });
+}
