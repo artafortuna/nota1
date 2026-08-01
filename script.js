@@ -247,7 +247,8 @@ function render() {
         html += `<div>
                     <div class="flex-row">
                         <span>${i.name} x ${i.qty} 
-                            <button class="item-delete-btn" onclick="hapusItem(${index})">Hapus</button>
+                            <!-- Menambahkan data-html2canvas-ignore agar tidak ikut terender -->
+                            <button class="item-delete-btn" data-html2canvas-ignore="true" onclick="hapusItem(${index})">Hapus</button>
                         </span> 
                         <span>Rp ${(i.price * i.qty).toLocaleString('id-ID')}</span>
                     </div>
@@ -369,6 +370,11 @@ window.onload = function() {
    ============================================================== */
 function downloadStruk() {
     const element = document.getElementById('printable');
+    
+    // Sembunyikan tombol hapus secara manual sebelum capture
+    const deleteBtns = element.querySelectorAll('.item-delete-btn');
+    deleteBtns.forEach(btn => btn.style.display = 'none');
+
     // Matikan shadow sementara agar hasil JPG lebih rapi di tepiannya
     const originalShadow = element.style.boxShadow;
     element.style.boxShadow = 'none';
@@ -386,6 +392,9 @@ function downloadStruk() {
         
         // Kembalikan shadow
         element.style.boxShadow = originalShadow;
+        
+        // Kembalikan tampilan tombol hapus
+        deleteBtns.forEach(btn => btn.style.display = '');
     });
 }
 
