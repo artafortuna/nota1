@@ -238,7 +238,7 @@ function render() {
     document.getElementById('outSubNama').innerText = document.getElementById('inSubNama').value || "Kediri - Jawa Timur - Indonesia";
     document.getElementById('outKasir').innerText = document.getElementById('inKasir').value;
     document.getElementById('outNota').innerText = document.getElementById('inNota').value;
-    document.getElementById('outFooter').innerText = document.getElementById('inFooter').value || "Terima kasih telah berbelanja di HYRA STORE";
+    document.getElementById('outFooter').innerText = document.getElementById('inFooter').value || "Terima kasih telah berbelanja di ARTA FORTUNA";
     document.getElementById('outMetode').innerText = document.getElementById('inBayarMetode').value;
     
     let html = '', total = 0;
